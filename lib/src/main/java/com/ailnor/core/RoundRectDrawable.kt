@@ -19,13 +19,6 @@ class RoundRectDrawable(
         private val COS_45 = cos(Math.toRadians(45.0))
         private const val SHADOW_MULTIPLIER = 1.5f
 
-        /*
-    * This helper is set by CardView implementations.
-    * <p>
-    * Prior to API 17, canvas.drawRoundRect is expensive; which is why we need this interface
-    * to draw efficient rounded rectangles before 17.
-    * */
-        var sRoundRectHelper: RoundRectHelper? = null
         fun calculateVerticalPadding(
             maxShadowSize: Float, cornerRadius: Float,
             addPaddingForCorners: Boolean
@@ -49,22 +42,19 @@ class RoundRectDrawable(
         }
     }
 
-    interface RoundRectHelper {
-        fun drawRoundRect(canvas: Canvas?, bounds: RectF?, cornerRadius: Float, paint: Paint?)
-    }
 
-    var mRadius = 0f
-    var mPaint: Paint? = null
-    var mBoundsF: RectF? = null
-    var mBoundsI: Rect? = null
-    var mPadding = 0f
-    var mInsetForPadding = false
-    var mInsetForRadius = true
+    private var mRadius = 0f
+    private var mPaint: Paint? = null
+    private var mBoundsF: RectF? = null
+    private var mBoundsI: Rect? = null
+    private var mPadding = 0f
+    private var mInsetForPadding = false
+    private var mInsetForRadius = true
 
-    var mBackground: ColorStateList? = null
-    var mTintFilter: PorterDuffColorFilter? = null
-    var mTint: ColorStateList? = null
-    var mTintMode: PorterDuff.Mode? = PorterDuff.Mode.SRC_IN
+    private var mBackground: ColorStateList? = null
+    private var mTintFilter: PorterDuffColorFilter? = null
+    private var mTint: ColorStateList? = null
+    private var mTintMode: PorterDuff.Mode? = PorterDuff.Mode.SRC_IN
 
     init {
         mRadius = radius
@@ -96,18 +86,14 @@ class RoundRectDrawable(
     }
 
     override fun draw(canvas: Canvas) {
-        val paint = mPaint
-        val clearColorFilter: Boolean
-        if (mTintFilter != null && paint!!.colorFilter == null) {
-            paint.colorFilter = mTintFilter
-            clearColorFilter = true
-        } else {
-            clearColorFilter = false
-        }
-        canvas.drawRoundRect(mBoundsF!!, mRadius, mRadius, paint!!)
-        if (clearColorFilter) {
-            paint.colorFilter = null
-        }
+        val clearColorFilter: Boolean = if (mTintFilter != null && mPaint!!.colorFilter == null) {
+            mPaint!!.colorFilter = mTintFilter
+            true
+        } else
+            false
+        canvas.drawRoundRect(mBoundsF!!, mRadius, mRadius, mPaint!!)
+        if (clearColorFilter)
+            mPaint!!.colorFilter = null
     }
 
     private fun updateBounds(bounds: Rect?) {

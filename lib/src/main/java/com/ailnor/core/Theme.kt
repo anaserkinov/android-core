@@ -11,40 +11,45 @@ object Theme {
 
     @ColorInt
     const val transparent = 0x0
+
     @ColorInt
     const val white = -0x1
+
     @ColorInt
     const val black = -0x1000000
+
     @ColorInt
     const val red = -0x10000
+
     @ColorInt
     const val green = -0xff0100
+
     @ColorInt
     const val yellow = -0x100
+
     @ColorInt
     const val grey_400 = -0x3C3C3D
+
     @ColorInt
     const val grey_600 = -0x919192
+
     @ColorInt
     const val dark_charcoal = -0xcccccd
+
     @ColorInt
     const val anti_flash_white = -0xf0d0b
 
-    private lateinit var _homeDrawable: DrawerArrowDrawable
-    private lateinit var _backDrawable: DrawerArrowDrawable
-    private lateinit var _crossDrawable: Drawable
+    @ColorInt
+    const val cultured = -0x121213
 
-    val homeNavigationIcon: Drawable
-        get() = _homeDrawable
-    val backNavigationIcon: Drawable
-        get() = _backDrawable
-    val closeNavigationIcon: Drawable
-        get() = _crossDrawable
+    @ColorInt
+    const val battleship_grey = -0x79797a
+
 
     fun init(
-        context: Context,
         colorPrimary: Int,
         colorOnPrimary: Int,
+        colorSecondary: Int,
         colorBackground: Int,
         colorOnBackground: Int,
         colorSurface: Int,
@@ -52,16 +57,10 @@ object Theme {
         appIcon64: Int,
         appIcon128: Int
     ) {
-        _homeDrawable = DrawerArrowDrawable(context)
-        _homeDrawable.progress = 0f
-        _homeDrawable.color = black
-        _backDrawable = DrawerArrowDrawable(context)
-        _backDrawable.progress = 1f
-        _backDrawable.color = black
-        _crossDrawable = context.resources.getDrawable(R.drawable._ic_cross, null)
-        _crossDrawable.setTint(black)
+
         Theme.colorPrimary = colorPrimary
         Theme.colorOnPrimary = colorOnPrimary
+        Theme.colorSecondary = colorSecondary
         Theme.colorBackground = colorBackground
         Theme.colorOnBackground = colorOnBackground
         Theme.colorSurface = colorSurface
@@ -71,7 +70,7 @@ object Theme {
     }
 
     fun Int.alpha(@IntRange(from = 0L, to = 100L) factor: Int): Int {
-        return ((factor * 255/100) shl 24) or (this and 0x00ffffff)
+        return ((factor * 255 / 100) shl 24) or (this and 0x00ffffff)
     }
 
     @DrawableRes
@@ -85,6 +84,9 @@ object Theme {
         private set
     @ColorInt
     var colorOnPrimary = 0x0
+        private set
+    @ColorInt
+    var colorSecondary = 0x0
         private set
     @ColorInt
     var colorBackground = 0x0

@@ -5,10 +5,12 @@
 package com.ailnor.core
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.*
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.StateListDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
@@ -184,7 +186,7 @@ fun makeRippleDrawable(
     bottomLeftRadius: Float = dp(4f),
     bottomRightRadius: Float = dp(4f),
     elevataion: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     val outerRadii = floatArrayOf(
         topLeftRadius,
         topLeftRadius,
@@ -200,7 +202,7 @@ fun makeRippleDrawable(
         val content: GradientDrawable?
         val mask: ShapeDrawable?
 
-        if (backgroundColor == android.graphics.Color.TRANSPARENT) {
+        if (backgroundColor == Theme.transparent) {
             content = null
             mask = ShapeDrawable(RoundRectShape(outerRadii, null, null))
             mask.colorFilter = PorterDuffColorFilter(rippleColor, PorterDuff.Mode.SRC_IN)
@@ -277,13 +279,13 @@ fun makeCircleRippleDrawable(
     @ColorInt backgroundColor: Int = Theme.transparent,
     @ColorInt disabledColor: Int = backgroundColor,
     elevataion: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
         val content: GradientDrawable?
         val mask: GradientDrawable?
 
-        if (backgroundColor == android.graphics.Color.TRANSPARENT) {
+        if (backgroundColor == Theme.transparent) {
             content = null
             mask = GradientDrawable()
             mask.setColor(rippleColor)
@@ -364,7 +366,7 @@ fun makeRoundedDrawable(
     cornerRadiusTR: Float = 0F,
     cornerRadiusBL: Float = 0F,
     cornerRadiusBR: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     val shapeDrawable = ShapeDrawable(
         RoundRectShape(
             floatArrayOf(
@@ -391,7 +393,7 @@ fun makeRoundedDrawable(
     @ColorInt color: Int = Theme.colorPrimary,
     cornerRadius: Float,
     elevataion: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     val outerRadii = FloatArray(8)
     Arrays.fill(outerRadii, cornerRadius)
     return ShapeDrawable(RoundRectShape(outerRadii, null, null)).also {
@@ -403,7 +405,7 @@ fun makeRoundedDrawable(
 fun makeCircleDrawable(
     @ColorInt color: Int = Theme.colorPrimary,
     elevataion: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     return ShapeDrawable(OvalShape()).also {
         it.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
     }
@@ -412,7 +414,7 @@ fun makeCircleDrawable(
 fun makeOutlinedDrawable(
     @ColorInt strokeColor: Int = Theme.colorPrimary,
     cornerRadius: Float = 0F
-): Drawable {
+): android.graphics.drawable.Drawable {
     val outerRadii = FloatArray(8)
     Arrays.fill(outerRadii, cornerRadius)
     val drawable = GradientDrawable()

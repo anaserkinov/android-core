@@ -6,6 +6,8 @@ package com.ailnor.core
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.WindowManager
@@ -55,8 +57,7 @@ fun Int.alpha(@IntRange(from = 0L, to = 100L) factor: Int): Int {
 
 fun Int.coloredDrawable(color: Int): Drawable {
     val drawable = drawable()
-//    drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
-    drawable.setTint(color)
+    drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
     return drawable
 }
 

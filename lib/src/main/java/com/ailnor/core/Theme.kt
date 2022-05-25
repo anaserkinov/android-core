@@ -45,6 +45,9 @@ object Theme {
     @ColorInt
     const val battleship_grey = -0x79797a
 
+    @ColorInt
+    const val platinum = -0x211d19
+
 
     fun init(
         colorPrimary: Int,

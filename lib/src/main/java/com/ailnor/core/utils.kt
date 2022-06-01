@@ -24,6 +24,7 @@ import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
 import java.util.*
 import kotlin.math.ceil
+import kotlin.math.floor
 
 const val MATCH_PARENT = -1
 const val WRAP_CONTENT = -2
@@ -39,6 +40,19 @@ fun dp(value: Float) =
         0F
     else
         ceil(Utilities.density * value)
+
+fun dp2(value: Int) =
+    if (value == 0)
+        0
+    else
+        floor(Utilities.density * value).toInt()
+
+
+fun dp2(value: Float) =
+    if (value == 0F)
+        0F
+    else
+        Utilities.density * value
 
 val measureSpec_unspecified = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
 fun measureSpec_at_most(atMost: Int) =

@@ -1,11 +1,9 @@
 package com.ailnor.core
 
-import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 
 object Theme {
 
@@ -103,4 +101,8 @@ object Theme {
     @ColorInt
     var colorOnSurface = 0x0
         private set
+
+
+    internal val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
 }

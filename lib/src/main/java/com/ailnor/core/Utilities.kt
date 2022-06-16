@@ -14,9 +14,11 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.util.SparseArray
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.util.forEach
+import androidx.core.view.children
 import java.lang.reflect.Field
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -283,6 +285,14 @@ object Utilities {
         if (adjustOwnerId == fragmentId) {
             activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         }
+    }
+
+    fun setEnabledFull(view: View, isEnabled: Boolean){
+        view.isEnabled = isEnabled
+        if (view is ViewGroup)
+            view.children.forEach {
+                setEnabledFull(it, isEnabled)
+            }
     }
 
     fun getOffsetColor(color1: Int, color2: Int, offset: Float, alpha: Float): Int {

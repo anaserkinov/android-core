@@ -175,7 +175,7 @@ fun linearLayoutParams(
 // Drawables
 
 fun makeRippleDrawable(
-    @ColorInt rippleColor: Int = Theme.black.alpha(25),
+    @ColorInt rippleColor: Int = Theme.platinum.alpha(70),
     @ColorInt backgroundColor: Int = Theme.transparent,
     @ColorInt disabledBackgroundColor: Int = backgroundColor,
     cornerRadius: Float = dp(4f),
@@ -192,7 +192,7 @@ fun makeRippleDrawable(
 )
 
 fun makeRippleDrawable(
-    @ColorInt rippleColor: Int = Theme.black.alpha(25),
+    @ColorInt rippleColor: Int = Theme.platinum.alpha(70),
     @ColorInt backgroundColor: Int = Theme.transparent,
     @ColorInt disabledBackgroundColor: Int = backgroundColor,
     topLeftRadius: Float = dp(4f),
@@ -225,9 +225,9 @@ fun makeRippleDrawable(
             content.cornerRadii = outerRadii
             content.color = ColorStateList(
                 arrayOf(
-                    intArrayOf(android.R.attr.state_activated),
-                    intArrayOf(android.R.attr.state_enabled),
-                    intArrayOf(-android.R.attr.state_enabled)
+                    intArrayOf(R.attr.state_activated),
+                    intArrayOf(R.attr.state_enabled),
+                    intArrayOf(-R.attr.state_enabled)
                 ),
                 intArrayOf(
                     backgroundColor,
@@ -263,9 +263,9 @@ fun makeRippleDrawable(
             it.cornerRadii = outerRadii
             it.color = ColorStateList(
                 arrayOf(
-                    intArrayOf(android.R.attr.state_activated),
-                    intArrayOf(android.R.attr.state_enabled),
-                    intArrayOf(-android.R.attr.state_enabled)
+                    intArrayOf(R.attr.state_activated),
+                    intArrayOf(R.attr.state_enabled),
+                    intArrayOf(-R.attr.state_enabled)
                 ),
                 intArrayOf(
                     backgroundColor,
@@ -278,8 +278,8 @@ fun makeRippleDrawable(
         val stateListDrawable = StateListDrawable()
         stateListDrawable.addState(
             intArrayOf(
-                android.R.attr.state_pressed,
-                android.R.attr.state_enabled
+                R.attr.state_pressed,
+                R.attr.state_enabled
             ), shapePressed
         )
         stateListDrawable.addState(intArrayOf(), shapeDefault)
@@ -289,7 +289,7 @@ fun makeRippleDrawable(
 
 
 fun makeCircleRippleDrawable(
-    @ColorInt rippleColor: Int = Theme.black.alpha(25),
+    @ColorInt rippleColor: Int = Theme.platinum.alpha(70),
     @ColorInt backgroundColor: Int = Theme.transparent,
     @ColorInt disabledColor: Int = backgroundColor,
     elevataion: Float = 0F
@@ -309,9 +309,9 @@ fun makeCircleRippleDrawable(
                 it.shape = GradientDrawable.OVAL
                 it.color = ColorStateList(
                     arrayOf(
-                        intArrayOf(android.R.attr.state_activated),
-                        intArrayOf(android.R.attr.state_enabled),
-                        intArrayOf(-android.R.attr.state_enabled)
+                        intArrayOf(R.attr.state_activated),
+                        intArrayOf(R.attr.state_enabled),
+                        intArrayOf(-R.attr.state_enabled)
                     ),
                     intArrayOf(
                         backgroundColor,
@@ -326,9 +326,9 @@ fun makeCircleRippleDrawable(
         RippleDrawable(
             ColorStateList(
                 arrayOf(
-                    intArrayOf(android.R.attr.state_pressed),
+                    intArrayOf(R.attr.state_pressed),
                     intArrayOf(android.R.attr.state_focused),
-                    intArrayOf(android.R.attr.state_activated)
+                    intArrayOf(R.attr.state_activated)
                 ),
                 intArrayOf(
                     rippleColor,
@@ -349,9 +349,9 @@ fun makeCircleRippleDrawable(
             it.shape = GradientDrawable.OVAL
             it.color = ColorStateList(
                 arrayOf(
-                    intArrayOf(android.R.attr.state_activated),
-                    intArrayOf(android.R.attr.state_enabled),
-                    intArrayOf(-android.R.attr.state_enabled)
+                    intArrayOf(R.attr.state_activated),
+                    intArrayOf(R.attr.state_enabled),
+                    intArrayOf(-R.attr.state_enabled)
                 ),
                 intArrayOf(
                     backgroundColor,
@@ -364,8 +364,8 @@ fun makeCircleRippleDrawable(
         val stateListDrawable = StateListDrawable()
         stateListDrawable.addState(
             intArrayOf(
-                android.R.attr.state_pressed,
-                android.R.attr.state_enabled
+                R.attr.state_pressed,
+                R.attr.state_enabled
             ), shapePressed
         )
         stateListDrawable.addState(intArrayOf(), shapeDefault)

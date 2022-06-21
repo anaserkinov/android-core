@@ -24,6 +24,7 @@ import com.ailnor.core.Theme.maskPaint
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 const val MATCH_PARENT = -1
@@ -53,6 +54,12 @@ fun dp2(value: Float) =
         0F
     else
         Utilities.density * value
+
+fun dpr(value: Float): Int {
+    return if (value == 0f) {
+        0
+    } else (Utilities.density * value).roundToInt()
+}
 
 val measureSpec_unspecified = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
 fun measureSpec_at_most(atMost: Int) =

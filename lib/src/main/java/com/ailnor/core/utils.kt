@@ -536,7 +536,7 @@ fun createSimpleSelectorRoundRectDrawable(
 
 fun createSelectorDrawableFromDrawables(normal: Drawable?, pressed: Drawable?): Drawable {
     val stateListDrawable = StateListDrawable()
-    stateListDrawable.addState(intArrayOf(R.attr.state_pressed), pressed)
+//    stateListDrawable.addState(intArrayOf(R.attr.state_pressed), pressed)
     stateListDrawable.addState(intArrayOf(R.attr.state_selected), pressed)
     stateListDrawable.addState(StateSet.WILD_CARD, normal)
     return stateListDrawable

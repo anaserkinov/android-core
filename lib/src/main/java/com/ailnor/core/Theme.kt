@@ -47,6 +47,9 @@ object Theme {
     const val platinum = -0x211d19
 
 
+    internal val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    internal val selectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
     fun init(
         colorPrimary: Int,
         colorOnPrimary: Int,
@@ -68,6 +71,9 @@ object Theme {
         Theme.colorOnSurface = colorOnSurface
         Theme.appIcon64 = appIcon64
         Theme.appIcon128 = appIcon128
+
+        selectedPaint.color = Theme.colorPrimary
+        selectedPaint
     }
 
     fun Int.alpha(@IntRange(from = 0L, to = 100L) factor: Int): Int {
@@ -101,8 +107,5 @@ object Theme {
     @ColorInt
     var colorOnSurface = 0x0
         private set
-
-
-    internal val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
 }

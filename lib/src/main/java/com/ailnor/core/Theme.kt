@@ -4,6 +4,7 @@ import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
+import androidx.core.graphics.ColorUtils
 
 object Theme {
 
@@ -79,6 +80,10 @@ object Theme {
     fun Int.alpha(@IntRange(from = 0L, to = 100L) factor: Int): Int {
         return ((factor * 255 / 100) shl 24) or (this and 0x00ffffff)
     }
+
+    fun Int.darken(factor: Float) = ColorUtils.blendARGB(
+        this, black, factor
+    )
 
     @DrawableRes
     var appIcon64 = 0

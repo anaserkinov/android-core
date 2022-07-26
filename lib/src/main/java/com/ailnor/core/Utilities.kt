@@ -43,7 +43,7 @@ object Utilities {
     private val removeAfterBroadcast = SparseArray<ArrayList<ActionListener>>()
     private val listeners = SparseArray<ArrayList<ActionListener>>()
 
-    val isLandscapeTablet: Boolean
+    val isLandscape: Boolean
         get() = !isPortrait
 
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {

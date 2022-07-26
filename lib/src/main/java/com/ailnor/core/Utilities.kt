@@ -44,7 +44,7 @@ object Utilities {
     private val listeners = SparseArray<ArrayList<ActionListener>>()
 
     val isLandscapeTablet: Boolean
-        get() = isTablet && !isPortrait
+        get() = !isPortrait
 
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
         isPortrait = if (newConfiguration != null)

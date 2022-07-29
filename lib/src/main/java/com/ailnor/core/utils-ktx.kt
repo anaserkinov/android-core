@@ -51,9 +51,6 @@ fun View.showKeyboard() {
 
 
 // Int
-fun Int.alpha(@IntRange(from = 0L, to = 100L) factor: Int): Int {
-    return ((factor * 255/100) shl 24) or (this and 0x00ffffff)
-}
 
 fun Int.coloredDrawable(color: Int): Drawable {
     val drawable = drawable()

@@ -84,6 +84,9 @@ object Theme {
     fun Int.darken(factor: Float) = ColorUtils.blendARGB(
         this, black, factor
     )
+    fun Int.lighten(factor: Float) = ColorUtils.blendARGB(
+        this, white, factor
+    )
 
     @DrawableRes
     var appIcon64 = 0

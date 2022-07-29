@@ -20,6 +20,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
+import com.ailnor.core.Theme.alpha
 import com.ailnor.core.Theme.maskPaint
 import java.util.*
 import kotlin.math.ceil

@@ -435,12 +435,15 @@ fun makeCircleDrawable(
 
 fun makeOutlinedDrawable(
     @ColorInt strokeColor: Int = Theme.colorPrimary,
+    @ColorInt backgroundColor: Int = Theme.transparent,
     cornerRadius: Float = 0F
 ): Drawable {
     val outerRadii = FloatArray(8)
     Arrays.fill(outerRadii, cornerRadius)
     val drawable = GradientDrawable()
     drawable.cornerRadii = outerRadii
+    if (backgroundColor != Theme.transparent)
+        drawable.color = ColorStateList.valueOf(backgroundColor)
     drawable.setStroke(dp(1), strokeColor)
     return drawable
 }

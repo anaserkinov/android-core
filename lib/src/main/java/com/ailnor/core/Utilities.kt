@@ -51,6 +51,7 @@ object Utilities {
             newConfiguration.orientation == Configuration.ORIENTATION_PORTRAIT
         else
             context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        fillStatusBarHeight(context)
         isTablet = context.resources.getBoolean(R.bool.isTablet)
         try {
 //            val oldDensity: Float = density

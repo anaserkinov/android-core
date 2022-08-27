@@ -8,7 +8,6 @@ import android.R
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.*
-import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
@@ -583,8 +582,14 @@ fun getSelectorDrawable(color: Int, backgroundColor: Int?): Drawable {
         createSelectorDrawable(color, 2)
 }
 
+const val RIPPLE_MASK_CIRCLE_20DP = 1
+const val RIPPLE_MASK_ALL = 2
+const val RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE = 3
+const val RIPPLE_MASK_CIRCLE_TO_BOUND_CORNER = 4
+const val RIPPLE_MASK_CIRCLE_AUTO = 5
+const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
-fun createSelectorDrawable(color: Int, maskType: Int = 1, radius: Int = -1): Drawable {
+fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, radius: Int = -1): Drawable {
     var maskDrawable: Drawable? = null
     if ((maskType == 1 || maskType == 5) && Build.VERSION.SDK_INT >= 23) {
         maskDrawable = null

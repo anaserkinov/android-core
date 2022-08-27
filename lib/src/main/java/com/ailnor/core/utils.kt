@@ -5,6 +5,7 @@
 package com.ailnor.core
 
 import android.R
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.*
@@ -21,6 +22,7 @@ import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
 import com.ailnor.core.Theme.alpha
 import com.ailnor.core.Theme.maskPaint
+import java.lang.reflect.Method
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -29,6 +31,8 @@ import kotlin.math.sqrt
 
 const val MATCH_PARENT = -1
 const val WRAP_CONTENT = -2
+
+private var StateListDrawable_getStateDrawableMethod: Method? = null
 
 fun dp(value: Int) =
     if (value == 0)
@@ -786,3 +790,92 @@ fun createRadSelectorDrawable(
     return RippleDrawable(colorStateList, null, maskDrawable)
 }
 
+@SuppressLint("PrivateApi")
+private fun getStateDrawable(drawable: Drawable, index: Int): Drawable? {
+    return if (Build.VERSION.SDK_INT >= 29 && drawable is StateListDrawable) {
+        drawable.getStateDrawable(index)
+    } else {
+        if (StateListDrawable_getStateDrawableMethod == null) {
+            try {
+                StateListDrawable_getStateDrawableMethod =
+                    StateListDrawable::class.java.getDeclaredMethod(
+                        "getStateDrawable",
+                        Int::class.javaPrimitiveType
+                    )
+            } catch (ignore: Throwable) {
+            }
+        }
+        if (StateListDrawable_getStateDrawableMethod == null) {
+            return null
+        }
+        try {
+            return StateListDrawable_getStateDrawableMethod!!.invoke(
+                drawable,
+                index
+            ) as? Drawable
+        } catch (ignore: Exception) {
+        }
+        null
+    }
+}
+
+fun setSelectorDrawableColor(drawable: Drawable?, color: Int, selected: Boolean) {
+    if (drawable is StateListDrawable) {
+        try {
+            var state: Drawable
+            if (selected) {
+                state = getStateDrawable(drawable, 0)!!
+                if (state is ShapeDrawable) {
+                    state.paint.color = color
+                } else {
+                    state.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
+                }
+                state = getStateDrawable(drawable, 1)!!
+            } else {
+                state = getStateDrawable(drawable, 2)!!
+            }
+            if (state is ShapeDrawable) {
+                state.paint.color = color
+            } else {
+                state.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
+            }
+        } catch (ignore: Throwable) {
+        }
+    } else if (Build.VERSION.SDK_INT >= 21 && drawable is RippleDrawable) {
+        val rippleDrawable = drawable
+        if (selected) {
+            rippleDrawable.setColor(ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color)))
+        } else {
+            if (rippleDrawable.numberOfLayers > 0) {
+                val drawable1 = rippleDrawable.getDrawable(0)
+                if (drawable1 is ShapeDrawable) {
+                    drawable1.paint.color = color
+                } else {
+                    drawable1.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
+                }
+            }
+        }
+    }
+
+    fun setMaskDrawableRad(rippleDrawable: Drawable?, top: Int, bottom: Int) {
+        if (Build.VERSION.SDK_INT < 21) {
+            return
+        }
+        if (rippleDrawable is RippleDrawable) {
+            val drawable = rippleDrawable
+            val count = drawable.numberOfLayers
+            for (a in 0 until count) {
+                val layer = drawable.getDrawable(a)
+                if (layer is RippleRadMaskDrawable) {
+                    drawable.setDrawableByLayerId(
+                        R.id.mask, RippleRadMaskDrawable(
+                            top.toFloat(),
+                            bottom.toFloat()
+                        )
+                    )
+                    break
+                }
+            }
+        }
+    }
+}

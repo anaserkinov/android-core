@@ -7,9 +7,7 @@ package com.ailnor.core
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Point
-import android.graphics.Rect
+import android.graphics.*
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.SparseArray
@@ -20,11 +18,13 @@ import android.view.WindowManager
 import androidx.core.util.forEach
 import androidx.core.view.children
 import java.lang.reflect.Field
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
 
 object Utilities {
 
+    private val typefaceCache = Hashtable<String, Typeface>()
     private var adjustOwnerId = 0
     private var lastFragmentId = 1
     var density = 1f
@@ -37,6 +37,8 @@ object Utilities {
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
+
+    val rectTmp = RectF()
 
     private var broadcasting = 0
     private val addAfterBroadcast = SparseArray<ArrayList<ActionListener>>()
@@ -311,6 +313,39 @@ object Utilities {
             (gS + (gF - gS) * offset).toInt(),
             (bS + (bF - bS) * offset).toInt()
         )
+    }
+
+    fun getTypeface(assetPath: String): Typeface? {
+        synchronized(typefaceCache) {
+            if (!typefaceCache.containsKey(assetPath)) {
+                try {
+                    val t = if (Build.VERSION.SDK_INT >= 26) {
+                        val builder =
+                            Typeface.Builder(
+                                Core.applicationContext.assets,
+                                assetPath
+                            )
+                        if (assetPath.contains("medium"))
+                            builder.setWeight(700)
+                        if (assetPath.contains("italic"))
+                            builder.setItalic(true)
+                        builder.build()
+                    } else {
+                        Typeface.createFromAsset(
+                            Core.applicationContext.assets,
+                            assetPath
+                        )
+                    }
+                    typefaceCache.put(assetPath, t)
+                } catch (e: java.lang.Exception) {
+//                    if (BuildVars.LOGS_ENABLED) {
+//                        FileLog.e("Could not get typeface '" + assetPath + "' because " + e.message)
+//                    }
+                    return null
+                }
+            }
+            return typefaceCache.get(assetPath)
+        }
     }
 
 }

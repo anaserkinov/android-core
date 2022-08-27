@@ -8,6 +8,20 @@ import androidx.core.graphics.ColorUtils
 
 object Theme {
 
+    var key_listSelector: String = "key_listSelector"
+
+    var key_actionBarDefault: String = "key_actionBarDefault"
+
+    var key_windowBackgroundWhiteBlackText: String = "key_windowBackgroundWhiteBlackText"
+
+    var key_fastScrollText: String = "key_fastScrollText"
+
+    var key_fastScrollActive: String = "key_fastScrollActive"
+
+    var key_fastScrollInactive: String = "key_fastScrollInactive"
+
+    var key_windowBackgroundWhite: String = "key_windowBackgroundWhite"
+
     @ColorInt
     const val transparent = 0x0
 
@@ -116,4 +130,13 @@ object Theme {
     var colorOnSurface = 0x0
         private set
 
+    class ResourcesProvider{
+        fun getColor(key: String): Int{
+            return Theme.yellow
+        }
+    }
+
+    fun getColor(value: String): Int{
+        return red
+    }
 }

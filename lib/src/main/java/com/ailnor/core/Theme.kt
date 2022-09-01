@@ -1,6 +1,7 @@
 package com.ailnor.core
 
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
@@ -64,6 +65,10 @@ object Theme {
 
     internal val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal val selectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private val defaultChatDrawables = HashMap<String, Drawable>()
+    private val defaultChatPaints = HashMap<String, Paint>()
+
 
     fun init(
         colorPrimary: Int,
@@ -130,13 +135,27 @@ object Theme {
     var colorOnSurface = 0x0
         private set
 
-    class ResourcesProvider{
-        fun getColor(key: String): Int{
-            return Theme.yellow
+    interface ResourcesProvider{
+        fun getColor(key: String): Int
+
+        fun getDrawable(drawableKey: String?): Drawable? {
+            return null
+        }
+
+        fun getPaint(paintKey: String?): Paint? {
+            return null
         }
     }
 
     fun getColor(value: String): Int{
         return red
+    }
+
+    fun getThemeDrawable(drawableKey: String?): Drawable? {
+        return defaultChatDrawables[drawableKey]
+    }
+
+    fun getThemePaint(paintKey: String?): Paint? {
+        return defaultChatPaints[paintKey]
     }
 }

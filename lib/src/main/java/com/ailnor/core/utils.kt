@@ -856,26 +856,4 @@ fun setSelectorDrawableColor(drawable: Drawable?, color: Int, selected: Boolean)
             }
         }
     }
-
-    fun setMaskDrawableRad(rippleDrawable: Drawable?, top: Int, bottom: Int) {
-        if (Build.VERSION.SDK_INT < 21) {
-            return
-        }
-        if (rippleDrawable is RippleDrawable) {
-            val drawable = rippleDrawable
-            val count = drawable.numberOfLayers
-            for (a in 0 until count) {
-                val layer = drawable.getDrawable(a)
-                if (layer is RippleRadMaskDrawable) {
-                    drawable.setDrawableByLayerId(
-                        R.id.mask, RippleRadMaskDrawable(
-                            top.toFloat(),
-                            bottom.toFloat()
-                        )
-                    )
-                    break
-                }
-            }
-        }
-    }
 }

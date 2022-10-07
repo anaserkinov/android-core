@@ -470,7 +470,7 @@ fun setCombinedDrawableColor(combinedDrawable: Drawable?, color: Int, isIcon: Bo
     }
 }
 
-fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColor: Int): Drawable? {
+fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColor: Int): Drawable {
     val ovalShape = OvalShape()
     ovalShape.resize(size.toFloat(), size.toFloat())
     val defaultDrawable = ShapeDrawable(ovalShape)
@@ -481,18 +481,12 @@ fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColo
     return RippleDrawable(colorStateList, defaultDrawable, pressedDrawable)
 }
 
-fun createRoundRectDrawable(rad: Int, defaultColor: Int): Drawable {
+fun createRoundRectDrawable(rad: Float, defaultColor: Int): Drawable {
     val defaultDrawable = ShapeDrawable(
         RoundRectShape(
             floatArrayOf(
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat()
+                rad, rad, rad, rad,
+                rad, rad, rad, rad
             ), null, null
         )
     )
@@ -550,7 +544,7 @@ fun createSelectorDrawableFromDrawables(normal: Drawable?, pressed: Drawable?): 
 }
 
 fun getRoundRectSelectorDrawable(corners: Int = dp(3), color: Int): Drawable {
-    val maskDrawable = createRoundRectDrawable(corners, -0x1)
+    val maskDrawable = createRoundRectDrawable(corners.toFloat(), -0x1)
     val colorStateList = ColorStateList(
         arrayOf(StateSet.WILD_CARD), intArrayOf(
             color and 0x00ffffff or 0x19000000

@@ -553,10 +553,33 @@ fun getRoundRectSelectorDrawable(corners: Int = dp(3), color: Int): Drawable {
     return RippleDrawable(colorStateList, null, maskDrawable)
 }
 
-fun createSelectorWithBackgroundDrawable(backgroundColor: Int, color: Int): Drawable {
+fun createSelectorWithBackgroundDrawable(
+    backgroundColor: Int,
+    color: Int,
+    disabledBackgroundColor: Int = backgroundColor
+): Drawable {
     val maskDrawable: Drawable = ColorDrawable(backgroundColor)
     val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
-    return RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
+    return if (backgroundColor == disabledBackgroundColor)
+        RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
+    else
+        RippleDrawable(
+            colorStateList,
+            GradientDrawable().also {
+                it.color = ColorStateList(
+                    arrayOf(
+                        intArrayOf(R.attr.state_activated),
+                        intArrayOf(R.attr.state_enabled),
+                        intArrayOf(-R.attr.state_enabled)
+                    ),
+                    intArrayOf(
+                        backgroundColor,
+                        backgroundColor,
+                        disabledBackgroundColor
+                    )
+                )
+            },
+            maskDrawable)
 }
 
 fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawable {

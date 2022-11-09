@@ -148,7 +148,7 @@ object Theme {
     }
 
     fun getColor(value: String): Int{
-        return red
+        return transparent
     }
 
     fun getThemeDrawable(drawableKey: String?): Drawable? {

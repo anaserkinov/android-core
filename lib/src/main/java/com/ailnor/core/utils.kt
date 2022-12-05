@@ -586,7 +586,7 @@ fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawa
     return if (whiteBackground) {
         getSelectorDrawable(color, Theme.green)
     } else {
-        createSelectorDrawable(color, 2)
+        createSelectorDrawable(color, RIPPLE_MASK_ALL)
     }
 }
 
@@ -600,7 +600,7 @@ fun getSelectorDrawable(color: Int, backgroundColor: Int?): Drawable {
             maskDrawable
         )
     } else
-        createSelectorDrawable(color, 2)
+        createSelectorDrawable(color, RIPPLE_MASK_ALL)
 }
 
 const val RIPPLE_MASK_CIRCLE_20DP = 1
@@ -612,9 +612,16 @@ const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
 fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, radius: Int = -1): Drawable {
     var maskDrawable: Drawable? = null
-    if ((maskType == 1 || maskType == 5) && Build.VERSION.SDK_INT >= 23) {
+    if ((maskType == RIPPLE_MASK_CIRCLE_20DP || maskType == RIPPLE_MASK_CIRCLE_AUTO) && Build.VERSION.SDK_INT >= 23) {
         maskDrawable = null
-    } else if (maskType == 1 || maskType == 3 || maskType == 4 || maskType == 5 || maskType == 6 || maskType == 7) {
+    } else if (
+        maskType == RIPPLE_MASK_CIRCLE_20DP
+        || maskType == RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE
+        || maskType == RIPPLE_MASK_CIRCLE_TO_BOUND_CORNER
+        || maskType == RIPPLE_MASK_CIRCLE_AUTO
+        || maskType == 6
+        || maskType == RIPPLE_MASK_ROUNDRECT_6DP
+    ) {
         maskPaint.color = -0x1
         maskDrawable = object : Drawable() {
             var rect: RectF? = null
@@ -633,10 +640,10 @@ fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, 
                     )
                 } else {
                     val rad = when (maskType) {
-                        1, 6 -> {
+                        RIPPLE_MASK_CIRCLE_20DP, 6 -> {
                             dp(20)
                         }
-                        3 -> {
+                        RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE -> {
                             bounds.width().coerceAtLeast(bounds.height()) / 2
                         }
                         else -> {
@@ -659,15 +666,15 @@ fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, 
                 return PixelFormat.UNKNOWN
             }
         }
-    } else if (maskType == 2) {
+    } else if (maskType == RIPPLE_MASK_ALL) {
         maskDrawable = ColorDrawable(-0x1)
     }
     val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
     val rippleDrawable = RippleDrawable(colorStateList, null, maskDrawable)
     if (Build.VERSION.SDK_INT >= 23) {
-        if (maskType == 1) {
+        if (maskType == RIPPLE_MASK_CIRCLE_20DP) {
             rippleDrawable.radius = if (radius <= 0) dp(20) else radius
-        } else if (maskType == 5) {
+        } else if (maskType == RIPPLE_MASK_CIRCLE_AUTO) {
             rippleDrawable.radius = RippleDrawable.RADIUS_AUTO
         }
     }

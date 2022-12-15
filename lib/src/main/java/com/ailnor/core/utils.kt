@@ -470,7 +470,7 @@ fun setCombinedDrawableColor(combinedDrawable: Drawable?, color: Int, isIcon: Bo
     }
 }
 
-fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColor: Int): Drawable? {
+fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColor: Int): Drawable {
     val ovalShape = OvalShape()
     ovalShape.resize(size.toFloat(), size.toFloat())
     val defaultDrawable = ShapeDrawable(ovalShape)
@@ -481,18 +481,12 @@ fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColo
     return RippleDrawable(colorStateList, defaultDrawable, pressedDrawable)
 }
 
-fun createRoundRectDrawable(rad: Int, defaultColor: Int): Drawable {
+fun createRoundRectDrawable(rad: Float, defaultColor: Int): Drawable {
     val defaultDrawable = ShapeDrawable(
         RoundRectShape(
             floatArrayOf(
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat(),
-                rad.toFloat()
+                rad, rad, rad, rad,
+                rad, rad, rad, rad
             ), null, null
         )
     )
@@ -550,7 +544,7 @@ fun createSelectorDrawableFromDrawables(normal: Drawable?, pressed: Drawable?): 
 }
 
 fun getRoundRectSelectorDrawable(corners: Int = dp(3), color: Int): Drawable {
-    val maskDrawable = createRoundRectDrawable(corners, -0x1)
+    val maskDrawable = createRoundRectDrawable(corners.toFloat(), -0x1)
     val colorStateList = ColorStateList(
         arrayOf(StateSet.WILD_CARD), intArrayOf(
             color and 0x00ffffff or 0x19000000
@@ -559,17 +553,40 @@ fun getRoundRectSelectorDrawable(corners: Int = dp(3), color: Int): Drawable {
     return RippleDrawable(colorStateList, null, maskDrawable)
 }
 
-fun createSelectorWithBackgroundDrawable(backgroundColor: Int, color: Int): Drawable {
+fun createSelectorWithBackgroundDrawable(
+    backgroundColor: Int,
+    color: Int,
+    disabledBackgroundColor: Int = backgroundColor
+): Drawable {
     val maskDrawable: Drawable = ColorDrawable(backgroundColor)
     val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
-    return RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
+    return if (backgroundColor == disabledBackgroundColor)
+        RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
+    else
+        RippleDrawable(
+            colorStateList,
+            GradientDrawable().also {
+                it.color = ColorStateList(
+                    arrayOf(
+                        intArrayOf(R.attr.state_activated),
+                        intArrayOf(R.attr.state_enabled),
+                        intArrayOf(-R.attr.state_enabled)
+                    ),
+                    intArrayOf(
+                        backgroundColor,
+                        backgroundColor,
+                        disabledBackgroundColor
+                    )
+                )
+            },
+            maskDrawable)
 }
 
 fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawable {
     return if (whiteBackground) {
         getSelectorDrawable(color, Theme.green)
     } else {
-        createSelectorDrawable(color, 2)
+        createSelectorDrawable(color, RIPPLE_MASK_ALL)
     }
 }
 
@@ -583,7 +600,7 @@ fun getSelectorDrawable(color: Int, backgroundColor: Int?): Drawable {
             maskDrawable
         )
     } else
-        createSelectorDrawable(color, 2)
+        createSelectorDrawable(color, RIPPLE_MASK_ALL)
 }
 
 const val RIPPLE_MASK_CIRCLE_20DP = 1
@@ -595,9 +612,16 @@ const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
 fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, radius: Int = -1): Drawable {
     var maskDrawable: Drawable? = null
-    if ((maskType == 1 || maskType == 5) && Build.VERSION.SDK_INT >= 23) {
+    if ((maskType == RIPPLE_MASK_CIRCLE_20DP || maskType == RIPPLE_MASK_CIRCLE_AUTO) && Build.VERSION.SDK_INT >= 23) {
         maskDrawable = null
-    } else if (maskType == 1 || maskType == 3 || maskType == 4 || maskType == 5 || maskType == 6 || maskType == 7) {
+    } else if (
+        maskType == RIPPLE_MASK_CIRCLE_20DP
+        || maskType == RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE
+        || maskType == RIPPLE_MASK_CIRCLE_TO_BOUND_CORNER
+        || maskType == RIPPLE_MASK_CIRCLE_AUTO
+        || maskType == 6
+        || maskType == RIPPLE_MASK_ROUNDRECT_6DP
+    ) {
         maskPaint.color = -0x1
         maskDrawable = object : Drawable() {
             var rect: RectF? = null
@@ -616,10 +640,10 @@ fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, 
                     )
                 } else {
                     val rad = when (maskType) {
-                        1, 6 -> {
+                        RIPPLE_MASK_CIRCLE_20DP, 6 -> {
                             dp(20)
                         }
-                        3 -> {
+                        RIPPLE_MASK_CIRCLE_TO_BOUND_EDGE -> {
                             bounds.width().coerceAtLeast(bounds.height()) / 2
                         }
                         else -> {
@@ -642,15 +666,15 @@ fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, 
                 return PixelFormat.UNKNOWN
             }
         }
-    } else if (maskType == 2) {
+    } else if (maskType == RIPPLE_MASK_ALL) {
         maskDrawable = ColorDrawable(-0x1)
     }
     val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
     val rippleDrawable = RippleDrawable(colorStateList, null, maskDrawable)
     if (Build.VERSION.SDK_INT >= 23) {
-        if (maskType == 1) {
+        if (maskType == RIPPLE_MASK_CIRCLE_20DP) {
             rippleDrawable.radius = if (radius <= 0) dp(20) else radius
-        } else if (maskType == 5) {
+        } else if (maskType == RIPPLE_MASK_CIRCLE_AUTO) {
             rippleDrawable.radius = RippleDrawable.RADIUS_AUTO
         }
     }
@@ -852,28 +876,6 @@ fun setSelectorDrawableColor(drawable: Drawable?, color: Int, selected: Boolean)
                     drawable1.paint.color = color
                 } else {
                     drawable1.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
-                }
-            }
-        }
-    }
-
-    fun setMaskDrawableRad(rippleDrawable: Drawable?, top: Int, bottom: Int) {
-        if (Build.VERSION.SDK_INT < 21) {
-            return
-        }
-        if (rippleDrawable is RippleDrawable) {
-            val drawable = rippleDrawable
-            val count = drawable.numberOfLayers
-            for (a in 0 until count) {
-                val layer = drawable.getDrawable(a)
-                if (layer is RippleRadMaskDrawable) {
-                    drawable.setDrawableByLayerId(
-                        R.id.mask, RippleRadMaskDrawable(
-                            top.toFloat(),
-                            bottom.toFloat()
-                        )
-                    )
-                    break
                 }
             }
         }

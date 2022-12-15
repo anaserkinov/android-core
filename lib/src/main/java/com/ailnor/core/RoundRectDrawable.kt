@@ -3,6 +3,7 @@ package com.ailnor.core
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.util.Log
 import kotlin.math.ceil
 import kotlin.math.cos
 
@@ -43,7 +44,8 @@ class RoundRectDrawable(
     }
 
 
-    private var mRadius = 0f
+    var radius = 0f
+    private set
     private var mPaint: Paint? = null
     private var mBoundsF: RectF? = null
     private var mBoundsI: Rect? = null
@@ -57,7 +59,7 @@ class RoundRectDrawable(
     private var mTintMode: PorterDuff.Mode? = PorterDuff.Mode.SRC_IN
 
     init {
-        mRadius = radius
+        this.radius = radius
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
         setBackground(backgroundColor)
         mBoundsF = RectF()
@@ -91,7 +93,7 @@ class RoundRectDrawable(
             true
         } else
             false
-        canvas.drawRoundRect(mBoundsF!!, mRadius, mRadius, mPaint!!)
+        canvas.drawRoundRect(mBoundsF!!, radius, radius, mPaint!!)
         if (clearColorFilter)
             mPaint!!.colorFilter = null
     }
@@ -107,12 +109,12 @@ class RoundRectDrawable(
         if (mInsetForPadding) {
             val vInset = calculateVerticalPadding(
                 mPadding,
-                mRadius,
+                radius,
                 mInsetForRadius
             )
             val hInset = calculateHorizontalPadding(
                 mPadding,
-                mRadius,
+                radius,
                 mInsetForRadius
             )
             mBoundsI!!.inset(
@@ -130,14 +132,15 @@ class RoundRectDrawable(
     }
 
     override fun getOutline(outline: Outline) {
-        outline.setRoundRect(mBoundsI!!, mRadius)
+        outline.setRoundRect(mBoundsI!!, radius)
     }
 
     fun setRadius(radius: Float) {
-        if (radius == mRadius) {
+        Log.e("radius", radius.toString())
+        if (radius == this.radius) {
             return
         }
-        mRadius = radius
+        this.radius = radius
         updateBounds(null)
         invalidateSelf()
     }
@@ -152,10 +155,6 @@ class RoundRectDrawable(
 
     override fun getOpacity(): Int {
         return PixelFormat.TRANSLUCENT
-    }
-
-    fun getRadius(): Float {
-        return mRadius
     }
 
     fun setColor(color: ColorStateList?) {

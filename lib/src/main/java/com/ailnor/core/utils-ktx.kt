@@ -64,5 +64,5 @@ fun Drawable.setColor(color: Int){
 }
 
 fun Int.drawable(): Drawable {
-    return Core.applicationContext.resources.getDrawable(this).mutate()
+    return Application.context.resources.getDrawable(this).mutate()
 }

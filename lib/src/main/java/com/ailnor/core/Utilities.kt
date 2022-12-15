@@ -322,7 +322,7 @@ object Utilities {
                     val t = if (Build.VERSION.SDK_INT >= 26) {
                         val builder =
                             Typeface.Builder(
-                                Core.applicationContext.assets,
+                                Application.context.assets,
                                 assetPath
                             )
                         if (assetPath.contains("medium"))
@@ -332,7 +332,7 @@ object Utilities {
                         builder.build()
                     } else {
                         Typeface.createFromAsset(
-                            Core.applicationContext.assets,
+                            Application.context.assets,
                             assetPath
                         )
                     }

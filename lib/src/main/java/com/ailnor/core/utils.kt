@@ -556,30 +556,91 @@ fun getRoundRectSelectorDrawable(corners: Int = dp(3), color: Int): Drawable {
 fun createSelectorWithBackgroundDrawable(
     backgroundColor: Int,
     color: Int,
-    disabledBackgroundColor: Int = backgroundColor
+    disabledBackgroundColor: Int = backgroundColor,
+    topRad: Float = 0f,
+    bottomRad: Float = 0F
 ): Drawable {
-    val maskDrawable: Drawable = ColorDrawable(backgroundColor)
-    val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
-    return if (backgroundColor == disabledBackgroundColor)
-        RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
-    else
-        RippleDrawable(
-            colorStateList,
-            GradientDrawable().also {
-                it.color = ColorStateList(
-                    arrayOf(
-                        intArrayOf(R.attr.state_activated),
-                        intArrayOf(R.attr.state_enabled),
-                        intArrayOf(-R.attr.state_enabled)
-                    ),
-                    intArrayOf(
-                        backgroundColor,
-                        backgroundColor,
-                        disabledBackgroundColor
+    if (topRad == 0f && bottomRad == 0F) {
+        val maskDrawable: Drawable = ColorDrawable(backgroundColor)
+        val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
+        return if (backgroundColor == disabledBackgroundColor)
+            RippleDrawable(colorStateList, ColorDrawable(backgroundColor), maskDrawable)
+        else
+            RippleDrawable(
+                colorStateList,
+                GradientDrawable().also {
+                    it.color = ColorStateList(
+                        arrayOf(
+                            intArrayOf(R.attr.state_activated),
+                            intArrayOf(R.attr.state_enabled),
+                            intArrayOf(-R.attr.state_enabled)
+                        ),
+                        intArrayOf(
+                            backgroundColor,
+                            backgroundColor,
+                            disabledBackgroundColor
+                        )
                     )
-                )
-            },
-            maskDrawable)
+                },
+                maskDrawable
+            )
+    } else {
+        val maskDrawable: Drawable = RippleRadMaskDrawable(topRad, bottomRad)
+        maskDrawable.setColor(backgroundColor)
+        val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
+        return if (backgroundColor == disabledBackgroundColor) {
+            val topRadDp = dp(topRad)
+            val bottomRadDp = dp(bottomRad)
+            RippleDrawable(
+                colorStateList, ShapeDrawable(
+                    RoundRectShape(
+                        floatArrayOf(
+                            topRadDp,
+                            topRadDp,
+                            topRadDp,
+                            topRadDp,
+                            bottomRadDp,
+                            bottomRadDp,
+                            bottomRadDp,
+                            bottomRadDp
+                        ),
+                        null,
+                        null
+                    )
+                ).also {
+                    it.paint.color = backgroundColor
+                }, maskDrawable
+            )
+        } else
+            RippleDrawable(
+                colorStateList,
+                GradientDrawable().also {
+                    it.color = ColorStateList(
+                        arrayOf(
+                            intArrayOf(R.attr.state_activated),
+                            intArrayOf(R.attr.state_enabled),
+                            intArrayOf(-R.attr.state_enabled)
+                        ),
+                        intArrayOf(
+                            backgroundColor,
+                            backgroundColor,
+                            disabledBackgroundColor
+                        )
+                    )
+                    it.cornerRadii = floatArrayOf(
+                        topRad,
+                        topRad,
+                        topRad,
+                        topRad,
+                        bottomRad,
+                        bottomRad,
+                        bottomRad,
+                        bottomRad
+                    )
+                },
+                maskDrawable
+            )
+    }
 }
 
 fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawable {
@@ -610,7 +671,11 @@ const val RIPPLE_MASK_CIRCLE_TO_BOUND_CORNER = 4
 const val RIPPLE_MASK_CIRCLE_AUTO = 5
 const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
-fun createSelectorDrawable(color: Int, maskType: Int = RIPPLE_MASK_CIRCLE_20DP, radius: Int = -1): Drawable {
+fun createSelectorDrawable(
+    color: Int,
+    maskType: Int = RIPPLE_MASK_CIRCLE_20DP,
+    radius: Int = -1
+): Drawable {
     var maskDrawable: Drawable? = null
     if ((maskType == RIPPLE_MASK_CIRCLE_20DP || maskType == RIPPLE_MASK_CIRCLE_AUTO) && Build.VERSION.SDK_INT >= 23) {
         maskDrawable = null

@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
 import com.ailnor.core.Theme.alpha
@@ -180,6 +181,29 @@ fun linearLayoutParams(
     )
     layoutParams.gravity = gravity
 
+    return layoutParams
+}
+
+fun relativeLayoutParams(
+    width: Int = WRAP_CONTENT,
+    height: Int = WRAP_CONTENT,
+    leftMargin: Int = 0,
+    topMargin: Int = 0,
+    rightMargin: Int = 0,
+    bottomMargin: Int = 0,
+    alignParent: Int = -1,
+    alignRelative: Int = -1,
+    anchorRelative: Int = -1
+): RelativeLayout.LayoutParams {
+    val layoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(width, height)
+    if (alignParent >= 0)
+        layoutParams.addRule(alignParent)
+    if (alignRelative >= 0 && anchorRelative >= 0)
+        layoutParams.addRule(alignRelative, anchorRelative)
+    layoutParams.leftMargin = dp(leftMargin)
+    layoutParams.topMargin = dp(topMargin)
+    layoutParams.rightMargin = dp(rightMargin)
+    layoutParams.bottomMargin = dp(bottomMargin)
     return layoutParams
 }
 

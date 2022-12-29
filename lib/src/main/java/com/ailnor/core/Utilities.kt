@@ -4,7 +4,12 @@
 
 package com.ailnor.core
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.*
@@ -37,6 +42,9 @@ object Utilities {
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
+
+    var mainInterfacePaused = true
+    var mainInterfaceStopped = true
 
     val rectTmp = RectF()
 
@@ -296,6 +304,37 @@ object Utilities {
             view.children.forEach {
                 setEnabledFull(it, isEnabled)
             }
+    }
+
+    fun isKeyguardSecure(): Boolean {
+        val km =
+            Application.context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        return km.isKeyguardSecure
+    }
+
+    fun shakeView(view: View?, x: Float, num: Int) {
+        if (view == null) {
+            return
+        }
+        if (num == 6) {
+            view.translationX = 0f
+            return
+        }
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(
+            ObjectAnimator.ofFloat(
+                view,
+                "translationX",
+                dp(x)
+            )
+        )
+        animatorSet.duration = 50
+        animatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                shakeView(view, if (num == 5) 0f else -x, num + 1)
+            }
+        })
+        animatorSet.start()
     }
 
     fun getOffsetColor(color1: Int, color2: Int, offset: Float, alpha: Float): Int {

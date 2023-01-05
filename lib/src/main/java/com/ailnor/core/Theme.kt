@@ -63,7 +63,7 @@ object Theme {
     const val platinum = -0x211d19
 
 
-    internal val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal val selectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val defaultChatDrawables = HashMap<String, Drawable>()

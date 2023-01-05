@@ -609,32 +609,25 @@ fun createSelectorWithBackgroundDrawable(
                 maskDrawable
             )
     } else {
-        val maskDrawable: Drawable = RippleRadMaskDrawable(topRad, bottomRad)
-        maskDrawable.setColor(backgroundColor)
+        val rads = floatArrayOf(
+            topRad,
+            topRad,
+            topRad,
+            topRad,
+            bottomRad,
+            bottomRad,
+            bottomRad,
+            bottomRad
+        )
+        val maskDrawable = ShapeDrawable(
+            RoundRectShape(rads, null, null)
+        ).also {
+            it.paint.color = backgroundColor
+        }
         val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
         return if (backgroundColor == disabledBackgroundColor) {
-            val topRadDp = dp(topRad)
-            val bottomRadDp = dp(bottomRad)
-            RippleDrawable(
-                colorStateList, ShapeDrawable(
-                    RoundRectShape(
-                        floatArrayOf(
-                            topRadDp,
-                            topRadDp,
-                            topRadDp,
-                            topRadDp,
-                            bottomRadDp,
-                            bottomRadDp,
-                            bottomRadDp,
-                            bottomRadDp
-                        ),
-                        null,
-                        null
-                    )
-                ).also {
-                    it.paint.color = backgroundColor
-                }, maskDrawable
-            )
+            maskPaint.color = backgroundColor
+            RippleDrawable(colorStateList, RippleRadMaskDrawable(topRad, bottomRad), maskDrawable)
         } else
             RippleDrawable(
                 colorStateList,
@@ -794,7 +787,7 @@ fun createCircleSelectorDrawable(color: Int, leftInset: Int, rightInset: Int): D
     return RippleDrawable(colorStateList, null, maskDrawable)
 }
 
-class RippleRadMaskDrawable : Drawable {
+open class RippleRadMaskDrawable : Drawable {
     private val path = Path()
     private val rect = RectF()
     private val radii = FloatArray(8)

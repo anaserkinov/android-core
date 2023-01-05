@@ -626,8 +626,12 @@ fun createSelectorWithBackgroundDrawable(
         }
         val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
         return if (backgroundColor == disabledBackgroundColor) {
-            maskPaint.color = backgroundColor
-            RippleDrawable(colorStateList, RippleRadMaskDrawable(topRad, bottomRad), maskDrawable)
+            RippleDrawable(colorStateList,
+                ShapeDrawable(
+                    RoundRectShape(rads, null, null)
+                ).also {
+                    it.paint.color = backgroundColor
+                }, maskDrawable)
         } else
             RippleDrawable(
                 colorStateList,

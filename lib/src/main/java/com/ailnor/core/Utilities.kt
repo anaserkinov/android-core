@@ -8,6 +8,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
@@ -335,6 +336,20 @@ object Utilities {
             }
         })
         animatorSet.start()
+    }
+
+    fun lerp(a: Float, b: Float, f: Float): Float {
+        return a + f * (b - a)
+    }
+
+    @SuppressLint("PrivateApi")
+    fun getSystemProperty(key: String?): String? {
+        try {
+            val props = Class.forName("android.os.SystemProperties")
+            return props.getMethod("get", String::class.java).invoke(null, key) as String
+        } catch (ignore: java.lang.Exception) {
+        }
+        return null
     }
 
     fun getOffsetColor(color1: Int, color2: Int, offset: Float, alpha: Float): Int {

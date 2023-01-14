@@ -505,7 +505,7 @@ fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColo
     return RippleDrawable(colorStateList, defaultDrawable, pressedDrawable)
 }
 
-fun createRoundRectDrawable(rad: Float, defaultColor: Int): Drawable {
+fun createRoundRectDrawable(rad: Float, defaultColor: Int): ShapeDrawable {
     val defaultDrawable = ShapeDrawable(
         RoundRectShape(
             floatArrayOf(

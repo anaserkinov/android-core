@@ -672,8 +672,8 @@ fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawa
     }
 }
 
-fun getSelectorDrawable(color: Int, backgroundColor: Int?): Drawable {
-    return if (backgroundColor != null) {
+fun getSelectorDrawable(color: Int, backgroundColor: Int): Drawable {
+    return if (backgroundColor != 0) {
         val maskDrawable: Drawable = ColorDrawable(-0x1)
         val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
         RippleDrawable(

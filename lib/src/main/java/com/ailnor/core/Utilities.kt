@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AccelerateInterpolator
 import androidx.core.util.forEach
 import androidx.core.view.children
 import java.lang.reflect.Field
@@ -43,6 +44,8 @@ object Utilities {
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
+
+    var accelerateInterpolator = AccelerateInterpolator()
 
     var mainInterfacePaused = true
     var mainInterfaceStopped = true

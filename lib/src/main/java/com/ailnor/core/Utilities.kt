@@ -4,10 +4,7 @@
 
 package com.ailnor.core
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.animation.*
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.KeyguardManager
@@ -158,9 +155,74 @@ object Utilities {
         }
     }
 
+    fun computePerceivedBrightness(color: Int): Float {
+        return Color.red(color) * 0.2126f + Color.green(color) * 0.7152f + Color.blue(color) * 0.0722f / 255f
+    }
+
     fun getStatusBarHeight(context: Context): Int {
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
         return if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId) else 0
+    }
+
+    private var navigationBarColorAnimators: HashMap<Window, ValueAnimator>? = null
+
+    interface IntColorCallback {
+        fun run(color: Int)
+    }
+
+    fun setNavigationBarColor(window: Window, color: Int) {
+        setNavigationBarColor(window, color, true)
+    }
+
+    fun setNavigationBarColor(window: Window, color: Int, animated: Boolean) {
+        setNavigationBarColor(window, color, animated, null)
+    }
+
+    fun setNavigationBarColor(
+        window: Window,
+        color: Int,
+        animated: Boolean,
+        onUpdate: IntColorCallback?
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (navigationBarColorAnimators != null) {
+                val animator = navigationBarColorAnimators!!.get(window)
+                if (animator != null) {
+                    animator.cancel()
+                    navigationBarColorAnimators!!.remove(window)
+                }
+            }
+            if (!animated) {
+                onUpdate?.run(color)
+                try {
+                    window.navigationBarColor = color
+                } catch (ignore: java.lang.Exception) {
+                }
+            } else {
+                val animator = ValueAnimator.ofArgb(window.navigationBarColor, color)
+                animator.addUpdateListener { a: ValueAnimator ->
+                    val tcolor = a.animatedValue as Int
+                    onUpdate?.run(tcolor)
+                    try {
+                        window.navigationBarColor = tcolor
+                    } catch (ignore: java.lang.Exception) {
+                    }
+                }
+                animator.addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        navigationBarColorAnimators?.remove(window)
+                    }
+                })
+                animator.duration = 200
+                animator.interpolator = CubicBezierInterpolator.DEFAULT
+                animator.start()
+                if (navigationBarColorAnimators == null) {
+                    navigationBarColorAnimators =
+                        HashMap<Window, ValueAnimator>()
+                }
+                navigationBarColorAnimators!![window] = animator
+            }
+        }
     }
 
     fun getViewInset(view: View?): Int {

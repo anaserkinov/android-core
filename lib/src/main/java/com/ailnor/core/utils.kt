@@ -664,7 +664,7 @@ fun createSelectorWithBackgroundDrawable(
     }
 }
 
-fun getSelectorDrawable(color: Int = Theme.red, whiteBackground: Boolean): Drawable {
+fun getSelectorDrawable(color: Int = 0x0F000000, whiteBackground: Boolean): Drawable {
     return if (whiteBackground) {
         getSelectorDrawable(color, Theme.green)
     } else {

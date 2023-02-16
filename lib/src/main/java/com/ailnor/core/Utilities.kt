@@ -38,12 +38,16 @@ object Utilities {
     var displaySize = Point()
     var displayMetrics = DisplayMetrics()
     var statusBarHeight = 0
+    var screenRefreshRate = 60f
     var isTablet = false
         private set
     var isPortrait = true
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
+
+    // temp
+    var smoothKeyboard = true
 
     var accelerateInterpolator = AccelerateInterpolator()
 
@@ -85,6 +89,7 @@ object Utilities {
             if (display != null) {
                 display.getMetrics(displayMetrics)
                 display.getSize(displaySize)
+                screenRefreshRate = display.refreshRate
             }
             if (configuration != null && configuration.screenWidthDp != Configuration.SCREEN_WIDTH_DP_UNDEFINED) {
                 val newSize =

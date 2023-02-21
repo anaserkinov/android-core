@@ -767,7 +767,7 @@ fun createSelectorDrawable(
     return rippleDrawable
 }
 
-fun createCircleSelectorDrawable(color: Int, leftInset: Int, rightInset: Int): Drawable {
+fun createCircleSelectorDrawable(color: Int = Theme.platinum.alpha(70), leftInset: Int = 0, rightInset: Int = 0): Drawable {
     maskPaint.setColor(-0x1)
     val maskDrawable: Drawable = object : Drawable() {
         override fun draw(canvas: Canvas) {

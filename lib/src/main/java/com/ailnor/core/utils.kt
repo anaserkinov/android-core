@@ -39,31 +39,31 @@ fun dp(value: Int) =
     if (value == 0)
         0
     else
-        ceil(Utilities.density * value).toInt()
+        ceil(AndroidUtilities.density * value).toInt()
 
 fun dp(value: Float) =
     if (value == 0F)
         0F
     else
-        ceil(Utilities.density * value)
+        ceil(AndroidUtilities.density * value)
 
 fun dp2(value: Int) =
     if (value == 0)
         0
     else
-        floor(Utilities.density * value).toInt()
+        floor(AndroidUtilities.density * value).toInt()
 
 
 fun dp2(value: Float) =
     if (value == 0F)
         0F
     else
-        Utilities.density * value
+        AndroidUtilities.density * value
 
 fun dpr(value: Float): Int {
     return if (value == 0f) {
         0
-    } else (Utilities.density * value).roundToInt()
+    } else (AndroidUtilities.density * value).roundToInt()
 }
 
 val measureSpec_unspecified = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
@@ -113,8 +113,13 @@ fun marginLayoutParams(
 
 fun frameLayoutParams(
     width: Int = WRAP_CONTENT,
+    height: Int = WRAP_CONTENT
+) = FrameLayout.LayoutParams(width, height)
+
+fun frameLayoutParams(
+    width: Int = WRAP_CONTENT,
     height: Int = WRAP_CONTENT,
-    gravity: Int = Gravity.CENTER
+    gravity: Int
 ) = FrameLayout.LayoutParams(width, height, gravity)
 
 fun frameLayoutParams(

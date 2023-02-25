@@ -38,7 +38,7 @@ public class XiaomiUtilities {
 	public static final int OP_WRITE_MMS = 10006;
 
 	public static boolean isMIUI() {
-		return !TextUtils.isEmpty(Utilities.INSTANCE.getSystemProperty("ro.miui.ui.version.name"));
+		return !TextUtils.isEmpty(AndroidUtilities.INSTANCE.getSystemProperty("ro.miui.ui.version.name"));
 	}
 
 	@SuppressWarnings("JavaReflectionMemberAccess")
@@ -56,7 +56,7 @@ public class XiaomiUtilities {
 	}
 
 	public static int getMIUIMajorVersion() {
-		String prop = Utilities.INSTANCE.getSystemProperty("ro.miui.ui.version.name");
+		String prop = AndroidUtilities.INSTANCE.getSystemProperty("ro.miui.ui.version.name");
 		if (prop != null) {
 			try {
 				return Integer.parseInt(prop.replace("V", ""));

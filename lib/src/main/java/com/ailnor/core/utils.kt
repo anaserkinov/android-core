@@ -631,12 +631,14 @@ fun createSelectorWithBackgroundDrawable(
         }
         val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color))
         return if (backgroundColor == disabledBackgroundColor) {
-            RippleDrawable(colorStateList,
+            RippleDrawable(
+                colorStateList,
                 ShapeDrawable(
                     RoundRectShape(rads, null, null)
                 ).also {
                     it.paint.color = backgroundColor
-                }, maskDrawable)
+                }, maskDrawable
+            )
         } else
             RippleDrawable(
                 colorStateList,
@@ -772,7 +774,11 @@ fun createSelectorDrawable(
     return rippleDrawable
 }
 
-fun createCircleSelectorDrawable(color: Int = Theme.platinum.alpha(70), leftInset: Int = 0, rightInset: Int = 0): Drawable {
+fun createCircleSelectorDrawable(
+    color: Int = Theme.platinum.alpha(70),
+    leftInset: Int = 0,
+    rightInset: Int = 0
+): Drawable {
     maskPaint.setColor(-0x1)
     val maskDrawable: Drawable = object : Drawable() {
         override fun draw(canvas: Canvas) {
@@ -934,20 +940,38 @@ private fun getStateDrawable(drawable: Drawable, index: Int): Drawable? {
     }
 }
 
-fun setSelectorDrawableColor(drawable: Drawable?, color: Int, selected: Boolean) {
-    if (drawable is StateListDrawable) {
+fun Drawable.setSelectorDrawableColor(backgroundColor: Int, disabledBackgroundColor: Int){
+    val drawable = (this as RippleDrawable).getDrawable(0)
+    if (drawable is GradientDrawable) {
+        drawable.color = ColorStateList(
+            arrayOf(
+                intArrayOf(R.attr.state_activated),
+                intArrayOf( R.attr.state_enabled),
+                intArrayOf(-R.attr.state_enabled)
+            ),
+            intArrayOf(
+                backgroundColor,
+                backgroundColor,
+                disabledBackgroundColor
+            )
+        )
+    }
+}
+
+fun Drawable.setSelectorDrawableColor(color: Int, selected: Boolean) {
+    if (this is StateListDrawable) {
         try {
             var state: Drawable
             if (selected) {
-                state = getStateDrawable(drawable, 0)!!
+                state = getStateDrawable(this, 0)!!
                 if (state is ShapeDrawable) {
                     state.paint.color = color
                 } else {
                     state.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
                 }
-                state = getStateDrawable(drawable, 1)!!
+                state = getStateDrawable(this, 1)!!
             } else {
-                state = getStateDrawable(drawable, 2)!!
+                state = getStateDrawable(this, 2)!!
             }
             if (state is ShapeDrawable) {
                 state.paint.color = color
@@ -956,8 +980,8 @@ fun setSelectorDrawableColor(drawable: Drawable?, color: Int, selected: Boolean)
             }
         } catch (ignore: Throwable) {
         }
-    } else if (Build.VERSION.SDK_INT >= 21 && drawable is RippleDrawable) {
-        val rippleDrawable = drawable
+    } else if (Build.VERSION.SDK_INT >= 21 && this is RippleDrawable) {
+        val rippleDrawable = this
         if (selected) {
             rippleDrawable.setColor(ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(color)))
         } else {

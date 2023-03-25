@@ -885,7 +885,7 @@ fun setMaskDrawableRad(rippleDrawable: Drawable?, top: Int, bottom: Int) {
     }
 }
 
-fun createRadSelectorDrawable(color: Int, topRad: Int, bottomRad: Int): Drawable {
+fun createRadSelectorDrawable(color: Int = Theme.platinum.alpha(70), topRad: Int, bottomRad: Int): Drawable {
     maskPaint.setColor(-0x1)
     val maskDrawable: Drawable = RippleRadMaskDrawable(
         topRad.toFloat(),

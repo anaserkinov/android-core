@@ -671,7 +671,7 @@ fun createSelectorWithBackgroundDrawable(
     }
 }
 
-fun getSelectorDrawable(color: Int = 0x0F000000, whiteBackground: Boolean): Drawable {
+fun getSelectorDrawable(color: Int = Theme.platinum.alpha(70), whiteBackground: Boolean = false): Drawable {
     return if (whiteBackground) {
         getSelectorDrawable(color, Theme.green)
     } else {
@@ -700,7 +700,7 @@ const val RIPPLE_MASK_CIRCLE_AUTO = 5
 const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
 fun createSelectorDrawable(
-    color: Int,
+    color: Int = Theme.platinum.alpha(70),
     maskType: Int = RIPPLE_MASK_CIRCLE_20DP,
     radius: Int = -1
 ): Drawable {
@@ -885,7 +885,7 @@ fun setMaskDrawableRad(rippleDrawable: Drawable?, top: Int, bottom: Int) {
     }
 }
 
-fun createRadSelectorDrawable(color: Int, topRad: Int, bottomRad: Int): Drawable {
+fun createRadSelectorDrawable(color: Int = Theme.platinum.alpha(70), topRad: Int, bottomRad: Int): Drawable {
     maskPaint.setColor(-0x1)
     val maskDrawable: Drawable = RippleRadMaskDrawable(
         topRad.toFloat(),

@@ -367,7 +367,7 @@ fun makeCircleRippleDrawable(
             ColorStateList(
                 arrayOf(
                     intArrayOf(R.attr.state_pressed),
-                    intArrayOf(android.R.attr.state_focused),
+                    intArrayOf(R.attr.state_focused),
                     intArrayOf(R.attr.state_activated)
                 ),
                 intArrayOf(

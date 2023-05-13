@@ -37,9 +37,14 @@ object AndroidUtilities {
     var displayMetrics = DisplayMetrics()
     var statusBarHeight = 0
     var screenRefreshRate = 60f
-    var isTablet = false
+    var wasPortrait = true
+    val isPortrait: Boolean
+        get() {
+            wasPortrait = Application.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            return wasPortrait
+        }
+    private var isTablet: Boolean? = null
         private set
-    var isPortrait = true
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
@@ -62,13 +67,18 @@ object AndroidUtilities {
     val isLandscape: Boolean
         get() = !isPortrait
 
+    fun isTablet(): Boolean{
+        if (isTablet == null)
+            isTablet = Application.context.resources.getBoolean(R.bool.isTablet)
+        return isTablet!!
+    }
+
+    fun resetTabletFlag(){
+        isTablet = null
+    }
+
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
-        isPortrait = if (newConfiguration != null)
-            newConfiguration.orientation == Configuration.ORIENTATION_PORTRAIT
-        else
-            context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         fillStatusBarHeight(context)
-        isTablet = context.resources.getBoolean(R.bool.isTablet)
         try {
 //            val oldDensity: Float = density
             density = context.resources.displayMetrics.density
@@ -365,7 +375,7 @@ object AndroidUtilities {
     fun generateFragmentId() = lastFragmentId ++
 
     fun requestAdjustResize(activity: Activity?, fragmentId: Int) {
-        if (activity == null || isTablet) {
+        if (activity == null || isTablet()) {
             return
         }
         activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -373,7 +383,7 @@ object AndroidUtilities {
     }
 
     fun requestAdjustNothing(activity: Activity?, fragmentId: Int) {
-        if (activity == null || isTablet) {
+        if (activity == null || isTablet()) {
             return
         }
         activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
@@ -381,7 +391,7 @@ object AndroidUtilities {
     }
 
     fun setAdjustResizeToNothing(activity: Activity?, fragmentId: Int) {
-        if (activity == null || isTablet) {
+        if (activity == null || isTablet()) {
             return
         }
         if (adjustOwnerId == 0 || adjustOwnerId == fragmentId) {
@@ -390,7 +400,7 @@ object AndroidUtilities {
     }
 
     fun removeAdjustResize(activity: Activity?, fragmentId: Int) {
-        if (activity == null || isTablet) {
+        if (activity == null || isTablet()) {
             return
         }
         if (adjustOwnerId == fragmentId) {

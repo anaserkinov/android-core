@@ -32,7 +32,9 @@ android {
 
 
 def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+try {
+    githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+} catch (Exception ignored){}
 
 def getVersionName = { ->
     return "1.0.0"
@@ -45,6 +47,7 @@ def getArtifactId = { ->
 publishing {
     publications {
         bar(MavenPublication) {
+
             groupId "${githubProperties['gpr.groupId']}.android"
             artifactId getArtifactId()
             version getVersionName()

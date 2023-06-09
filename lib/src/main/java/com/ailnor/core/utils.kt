@@ -701,7 +701,7 @@ const val RIPPLE_MASK_ROUNDRECT_6DP = 7
 
 fun createSelectorDrawable(
     color: Int = Theme.platinum.alpha(70),
-    maskType: Int = RIPPLE_MASK_CIRCLE_20DP,
+    maskType: Int = RIPPLE_MASK_ALL,
     radius: Int = -1
 ): Drawable {
     var maskDrawable: Drawable? = null

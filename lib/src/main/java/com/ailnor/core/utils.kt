@@ -958,6 +958,30 @@ fun Drawable.setSelectorDrawableColor(backgroundColor: Int, disabledBackgroundCo
     }
 }
 
+fun Drawable.setRippleDrawableColor(
+    rippleColor: Int,
+    backgroundColor: Int,
+    disabledBackgroundColor: Int = backgroundColor
+){
+    this as RippleDrawable
+    val drawable = this.getDrawable(0)
+    this.setColor(ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(rippleColor)))
+    if (drawable is GradientDrawable) {
+        drawable.color = ColorStateList(
+            arrayOf(
+                intArrayOf(R.attr.state_activated),
+                intArrayOf( R.attr.state_enabled),
+                intArrayOf(-R.attr.state_enabled)
+            ),
+            intArrayOf(
+                backgroundColor,
+                backgroundColor,
+                disabledBackgroundColor
+            )
+        )
+    }
+}
+
 fun Drawable.setSelectorDrawableColor(color: Int, selected: Boolean) {
     if (this is StateListDrawable) {
         try {

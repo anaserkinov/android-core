@@ -5,6 +5,8 @@ plugins {
 }
 
 android {
+    namespace "com.ailnor.core"
+
     compileSdk 32
 
     defaultConfig {

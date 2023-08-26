@@ -511,17 +511,22 @@ fun createSimpleSelectorCircleDrawable(size: Int, defaultColor: Int, pressedColo
 }
 
 fun createRoundRectDrawable(rad: Float, defaultColor: Int): ShapeDrawable {
+    return createRoundRectDrawable(rad, rad, defaultColor)
+}
+
+fun createRoundRectDrawable(topRad: Float, bottomRad: Float, defaultColor: Int): ShapeDrawable {
     val defaultDrawable = ShapeDrawable(
         RoundRectShape(
             floatArrayOf(
-                rad, rad, rad, rad,
-                rad, rad, rad, rad
+                topRad, topRad, topRad, topRad,
+                bottomRad, bottomRad, bottomRad, bottomRad
             ), null, null
         )
     )
     defaultDrawable.paint.color = defaultColor
     return defaultDrawable
 }
+
 
 
 fun createSimpleSelectorRoundRectDrawable(

@@ -528,7 +528,6 @@ fun createRoundRectDrawable(topRad: Float, bottomRad: Float, defaultColor: Int):
 }
 
 
-
 fun createSimpleSelectorRoundRectDrawable(
     rad: Int,
     defaultColor: Int,

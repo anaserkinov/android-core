@@ -162,6 +162,7 @@ fun linearLayoutParams(
 ): LinearLayout.LayoutParams {
     val layoutParams = LinearLayout.LayoutParams(width, height, weight)
     layoutParams.gravity = gravity
+    layoutParams.rightMargin
     layoutParams.setMargins(margin)
 
     return layoutParams

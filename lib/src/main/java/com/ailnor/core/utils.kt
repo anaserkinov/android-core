@@ -724,7 +724,7 @@ fun createSelectorDrawable(
             var rect: RectF? = null
             override fun draw(canvas: Canvas) {
                 val bounds = bounds
-                if (maskType == 7) {
+                if (maskType == RIPPLE_MASK_ROUNDRECT_6DP) {
                     if (rect == null) {
                         rect = RectF()
                     }
@@ -900,7 +900,7 @@ fun createRadSelectorDrawable(color: Int = Theme.platinum.alpha(70), topRad: Int
 }
 
 fun createRadSelectorDrawable(
-    color: Int,
+    color: Int = Theme.platinum.alpha(70),
     topLeftRad: Int,
     topRightRad: Int,
     bottomRightRad: Int,

@@ -17,6 +17,7 @@ import android.util.DisplayMetrics
 import android.util.SparseArray
 import android.view.*
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.util.forEach
@@ -53,6 +54,7 @@ object AndroidUtilities {
     var smoothKeyboard = true
 
     var accelerateInterpolator = AccelerateInterpolator()
+    var decelerateInterpolator = DecelerateInterpolator()
 
     var mainInterfacePaused = true
     var mainInterfaceStopped = true
@@ -76,6 +78,10 @@ object AndroidUtilities {
     fun resetTabletFlag(){
         isTablet = null
     }
+
+    fun isRTL() = false
+
+    fun isRTL(text: CharSequence?) = false
 
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
         fillStatusBarHeight(context)

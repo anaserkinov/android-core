@@ -1,9 +1,17 @@
 package com.ailnor.core
 
 import android.content.res.ColorStateList
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.PixelFormat
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.util.Log
 import kotlin.math.ceil
 import kotlin.math.cos
 
@@ -136,7 +144,6 @@ class RoundRectDrawable(
     }
 
     fun setRadius(radius: Float) {
-        Log.e("radius", radius.toString())
         if (radius == this.radius) {
             return
         }

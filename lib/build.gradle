@@ -6,6 +6,7 @@ plugins {
 
 android {
     compileSdk 32
+    namespace 'com.ailnor.core'
 
     defaultConfig {
         minSdk 21

@@ -60,9 +60,6 @@ object Theme {
     const val anti_flash_white = -0xf0d0b
 
     @ColorInt
-    const val cultured = -0x121213
-
-    @ColorInt
     const val battleship_grey = -0x79797a
 
     @ColorInt

@@ -11,6 +11,7 @@ import android.graphics.*
 import android.graphics.drawable.*
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RoundRectShape
+import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import android.util.StateSet
 import android.view.Gravity
@@ -241,16 +242,31 @@ fun makeRippleDrawable(
     bottomRightRadius: Float = dp(4f),
     elevataion: Float = 0F
 ): Drawable {
-    val outerRadii = floatArrayOf(
-        topLeftRadius,
-        topLeftRadius,
-        topRightRadius,
-        topRightRadius,
-        bottomRightRadius,
-        bottomRightRadius,
-        bottomLeftRadius,
-        bottomLeftRadius
+    return makeRippleDrawable(
+        rippleColor,
+        backgroundColor,
+        disabledBackgroundColor,
+        floatArrayOf(
+            topLeftRadius,
+            topLeftRadius,
+            topRightRadius,
+            topRightRadius,
+            bottomRightRadius,
+            bottomRightRadius,
+            bottomLeftRadius,
+            bottomLeftRadius
+        ),
+        elevataion
     )
+}
+
+fun makeRippleDrawable(
+    @ColorInt rippleColor: Int = Theme.platinum.alpha(70),
+    @ColorInt backgroundColor: Int = Theme.transparent,
+    @ColorInt disabledBackgroundColor: Int = backgroundColor,
+    cornerRadii: FloatArray,
+    elevataion: Float = 0F
+): Drawable {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
         val content: GradientDrawable?
@@ -258,11 +274,11 @@ fun makeRippleDrawable(
 
         if (backgroundColor == Theme.transparent) {
             content = null
-            mask = ShapeDrawable(RoundRectShape(outerRadii, null, null))
+            mask = ShapeDrawable(RoundRectShape(cornerRadii, null, null))
             mask.colorFilter = PorterDuffColorFilter(rippleColor, PorterDuff.Mode.SRC_IN)
         } else {
             content = GradientDrawable()
-            content.cornerRadii = outerRadii
+            content.cornerRadii = cornerRadii
             content.color = ColorStateList(
                 arrayOf(
                     intArrayOf(R.attr.state_activated),
@@ -295,12 +311,12 @@ fun makeRippleDrawable(
 
     } else {
 
-        val shapePressed = ShapeDrawable(RoundRectShape(outerRadii, null, null))
+        val shapePressed = ShapeDrawable(RoundRectShape(cornerRadii, null, null))
         shapePressed.colorFilter =
             PorterDuffColorFilter(rippleColor, PorterDuff.Mode.SRC_IN)
 
         val shapeDefault = GradientDrawable().also {
-            it.cornerRadii = outerRadii
+            it.cornerRadii = cornerRadii
             it.color = ColorStateList(
                 arrayOf(
                     intArrayOf(R.attr.state_activated),
@@ -515,12 +531,16 @@ fun createRoundRectDrawable(rad: Float, defaultColor: Int): ShapeDrawable {
 }
 
 fun createRoundRectDrawable(topRad: Float, bottomRad: Float, defaultColor: Int): ShapeDrawable {
+    return createRoundRectDrawable(floatArrayOf(
+        topRad, topRad, topRad, topRad,
+        bottomRad, bottomRad, bottomRad, bottomRad
+    ), defaultColor)
+}
+
+fun createRoundRectDrawable(radii: FloatArray, defaultColor: Int): ShapeDrawable {
     val defaultDrawable = ShapeDrawable(
         RoundRectShape(
-            floatArrayOf(
-                topRad, topRad, topRad, topRad,
-                bottomRad, bottomRad, bottomRad, bottomRad
-            ), null, null
+            radii, null, null
         )
     )
     defaultDrawable.paint.color = defaultColor
@@ -984,6 +1004,19 @@ fun Drawable.setRippleDrawableColor(
             )
         )
     }
+}
+
+fun Drawable.setRippleDrawableRadius(radii: FloatArray){
+    this as RippleDrawable
+    val drawable = this.getDrawable(0)
+    if (drawable is GradientDrawable) {
+        drawable.cornerRadii = radii
+    }
+}
+
+fun Drawable.setShapeDrawableShape(shape: Shape){
+    this as ShapeDrawable
+    this.shape = shape
 }
 
 fun Drawable.setSelectorDrawableColor(color: Int, selected: Boolean) {

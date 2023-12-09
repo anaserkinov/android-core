@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.forEach
 import androidx.core.view.children
 import java.lang.reflect.Field
+import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
@@ -66,8 +67,21 @@ object AndroidUtilities {
     private val removeAfterBroadcast = SparseArray<ArrayList<ActionListener>>()
     private val listeners = SparseArray<ArrayList<ActionListener>>()
 
+    var random = SecureRandom()
+
     val isLandscape: Boolean
         get() = !isPortrait
+
+    private var lastHolidayCheckTime = -1L
+    var isHoliday = false
+        get() {
+            if ((System.currentTimeMillis() - lastHolidayCheckTime) > 60 * 1000){
+                val month = Calendar.getInstance().get(Calendar.MONTH)
+                field = month == 0 || month == 1 || month == 11
+                lastHolidayCheckTime = System.currentTimeMillis()
+            }
+            return field
+        }
 
     fun isTablet(): Boolean{
         if (isTablet == null)
@@ -82,6 +96,7 @@ object AndroidUtilities {
     fun isRTL() = false
 
     fun isRTL(text: CharSequence?) = false
+
 
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
         fillStatusBarHeight(context)

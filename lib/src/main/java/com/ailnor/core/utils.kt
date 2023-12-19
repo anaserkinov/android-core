@@ -1020,6 +1020,11 @@ fun Drawable.setShapeDrawableShape(shape: Shape){
     this.shape = shape
 }
 
+fun Drawable.setShapeDrawableColor(color: Int){
+    this as ShapeDrawable
+    this.paint.color = color
+}
+
 fun Drawable.setSelectorDrawableColor(color: Int, selected: Boolean) {
     if (this is StateListDrawable) {
         try {

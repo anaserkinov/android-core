@@ -99,6 +99,8 @@ object AndroidUtilities {
 
 
     fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
+        // just calling get function of isPortrait to save current orientation into wasPortrait
+        isPortrait
         fillStatusBarHeight(context)
         try {
 //            val oldDensity: Float = density

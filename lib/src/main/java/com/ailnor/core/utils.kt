@@ -980,6 +980,8 @@ fun Drawable.setSelectorDrawableColor(backgroundColor: Int, disabledBackgroundCo
                 disabledBackgroundColor
             )
         )
+    } else if (drawable is ColorDrawable){
+        drawable.color = backgroundColor
     }
 }
 

@@ -45,9 +45,9 @@ public class XiaomiUtilities {
 	@TargetApi(19)
 	public static boolean isCustomPermissionGranted(int permission) {
 		try {
-			AppOpsManager mgr = (AppOpsManager) Application.context.getSystemService(Context.APP_OPS_SERVICE);
+			AppOpsManager mgr = (AppOpsManager) Application.getMContext().getSystemService(Context.APP_OPS_SERVICE);
 			Method m = AppOpsManager.class.getMethod("checkOpNoThrow", int.class, int.class, String.class);
-			int result = (int) m.invoke(mgr, permission, android.os.Process.myUid(), Application.context.getPackageName());
+			int result = (int) m.invoke(mgr, permission, android.os.Process.myUid(), Application.getMContext().getPackageName());
 			return result == AppOpsManager.MODE_ALLOWED;
 		} catch (Exception x) {
 //			FileLog.e(x);
@@ -69,7 +69,7 @@ public class XiaomiUtilities {
 	public static Intent getPermissionManagerIntent() {
 		Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
 		intent.putExtra("extra_package_uid", android.os.Process.myUid());
-		intent.putExtra("extra_pkgname", Application.context.getPackageName());
+		intent.putExtra("extra_pkgname", Application.getMContext().getPackageName());
 		return intent;
 	}
 }

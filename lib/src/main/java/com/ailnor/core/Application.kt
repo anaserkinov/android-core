@@ -15,7 +15,10 @@ import java.io.File
 open class Application: Application() {
 
     companion object{
-        lateinit var context: Context
+        @JvmStatic
+        protected var mContext: Context? = null
+        val context: Context
+            get() = mContext!!
         lateinit var handler: Handler
 
         @JvmStatic
@@ -43,7 +46,7 @@ open class Application: Application() {
     override fun onCreate() {
         super.onCreate()
         handler = Handler(applicationContext.mainLooper)
-        context = applicationContext
+        mContext = applicationContext
     }
 
 }

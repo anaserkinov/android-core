@@ -4,18 +4,33 @@
 
 package com.ailnor.core
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Point
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.SparseArray
-import android.view.*
+import android.view.TextureView
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -24,7 +39,8 @@ import androidx.core.util.forEach
 import androidx.core.view.children
 import java.lang.reflect.Field
 import java.security.SecureRandom
-import java.util.*
+import java.util.Calendar
+import java.util.Hashtable
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -610,6 +626,47 @@ object AndroidUtilities {
                 animate.translationY(dp(-16f) * translate)
             }
             animate.start()
+        }
+    }
+
+    fun snapshotView(v: View): Bitmap {
+        val bm = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bm)
+        v.draw(canvas)
+        val loc = IntArray(2)
+        v.getLocationInWindow(loc)
+        snapshotTextureViews(loc[0], loc[1], loc, canvas, v)
+        return bm
+    }
+
+    private fun snapshotTextureViews(
+        rootX: Int,
+        rootY: Int,
+        loc: IntArray,
+        canvas: Canvas,
+        v: View
+    ) {
+        if (v is TextureView) {
+            val tv = v
+            tv.getLocationInWindow(loc)
+            val textureSnapshot = tv.bitmap
+            if (textureSnapshot != null) {
+                canvas.save()
+                canvas.drawBitmap(
+                    textureSnapshot,
+                    (loc[0] - rootX).toFloat(),
+                    (loc[1] - rootY).toFloat(),
+                    null
+                )
+                canvas.restore()
+                textureSnapshot.recycle()
+            }
+        }
+        if (v is ViewGroup) {
+            val vg = v
+            for (i in 0 until vg.childCount) {
+                snapshotTextureViews(rootX, rootY, loc, canvas, vg.getChildAt(i))
+            }
         }
     }
 

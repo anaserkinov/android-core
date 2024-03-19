@@ -248,6 +248,60 @@ object AndroidUtilities {
         fun run(color: Int)
     }
 
+    fun setStatusBarColor(window: Window, color: Int) {
+        setStatusBarColor(window, color, true)
+    }
+
+    fun setStatusBarColor(window: Window, color: Int, animated: Boolean) {
+        setStatusBarColor(window, color, animated, null)
+    }
+
+    fun setStatusBarColor(
+        window: Window,
+        color: Int,
+        animated: Boolean,
+        onUpdate: IntColorCallback?
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (navigationBarColorAnimators != null) {
+                val animator = navigationBarColorAnimators!!.get(window)
+                if (animator != null) {
+                    animator.cancel()
+                    navigationBarColorAnimators!!.remove(window)
+                }
+            }
+            if (!animated) {
+                onUpdate?.run(color)
+                try {
+                    window.statusBarColor = color
+                } catch (ignore: java.lang.Exception) {
+                }
+            } else {
+                val animator = ValueAnimator.ofArgb(window.statusBarColor, color)
+                animator.addUpdateListener { a: ValueAnimator ->
+                    val tcolor = a.animatedValue as Int
+                    onUpdate?.run(tcolor)
+                    try {
+                        window.statusBarColor = tcolor
+                    } catch (ignore: java.lang.Exception) {
+                    }
+                }
+                animator.addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        navigationBarColorAnimators?.remove(window)
+                    }
+                })
+                animator.duration = 200
+                animator.interpolator = CubicBezierInterpolator.DEFAULT
+                animator.start()
+                if (navigationBarColorAnimators == null) {
+                    navigationBarColorAnimators = HashMap()
+                }
+                navigationBarColorAnimators!![window] = animator
+            }
+        }
+    }
+
     fun setNavigationBarColor(window: Window, color: Int) {
         setNavigationBarColor(window, color, true)
     }

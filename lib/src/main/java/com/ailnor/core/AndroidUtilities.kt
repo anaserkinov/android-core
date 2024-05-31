@@ -27,6 +27,7 @@ import android.util.DisplayMetrics
 import android.util.SparseArray
 import android.view.TextureView
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowInsetsController
@@ -66,6 +67,7 @@ object AndroidUtilities {
     var isInMultiWindow = false
     private var mAttachInfoField: Field? = null
     private var mStableInsetsField: Field? = null
+    var touchSlop: Float = 0f
 
     // temp
     var smoothKeyboard = true
@@ -77,6 +79,7 @@ object AndroidUtilities {
     var mainInterfaceStopped = true
 
     val rectTmp = RectF()
+    val rectTmp2: Rect = Rect()
 
     private var broadcasting = 0
     private val addAfterBroadcast = SparseArray<ArrayList<ActionListener>>()
@@ -152,6 +155,9 @@ object AndroidUtilities {
                 if (abs(displaySize.y - newSize) > 3)
                     displaySize.y = newSize
             }
+
+            val vc = ViewConfiguration.get(context)
+            touchSlop = vc.scaledTouchSlop.toFloat()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -724,6 +730,9 @@ object AndroidUtilities {
         }
     }
 
+    fun lerp(ab: FloatArray, f: Float): Float {
+        return lerp(ab[0], ab[1], f)
+    }
 
     fun lerp(a: Float, b: Float, f: Float): Float {
         return a + f * (b - a)

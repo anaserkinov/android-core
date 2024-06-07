@@ -63,7 +63,7 @@ object Theme {
     const val battleship_grey = -0x79797a
 
     @ColorInt
-    const val platinum = -0x211d19
+    const val platinum = 0xFFF0F0F0.toInt()
 
 
     val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)

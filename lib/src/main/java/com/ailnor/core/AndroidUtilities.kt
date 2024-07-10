@@ -48,7 +48,7 @@ import kotlin.math.ceil
 
 object AndroidUtilities {
 
-    private val typefaceCache = Hashtable<String, Typeface>()
+    private val typefaceCache = HashMap<String, Typeface>()
     private var adjustOwnerId = 0
     private var lastFragmentId = 1
     var density = 1f
@@ -770,23 +770,16 @@ object AndroidUtilities {
             if (!typefaceCache.containsKey(assetPath)) {
                 try {
                     val t = if (Build.VERSION.SDK_INT >= 26) {
-                        val builder =
-                            Typeface.Builder(
-                                Application.context.assets,
-                                assetPath
-                            )
+                        val builder = Typeface.Builder(Application.context.assets, assetPath)
                         if (assetPath.contains("medium"))
                             builder.setWeight(700)
                         if (assetPath.contains("italic"))
                             builder.setItalic(true)
                         builder.build()
                     } else {
-                        Typeface.createFromAsset(
-                            Application.context.assets,
-                            assetPath
-                        )
+                        Typeface.createFromAsset(Application.context.assets, assetPath)
                     }
-                    typefaceCache.put(assetPath, t)
+                    typefaceCache[assetPath] = t
                 } catch (e: java.lang.Exception) {
 //                    if (BuildVars.LOGS_ENABLED) {
 //                        FileLog.e("Could not get typeface '" + assetPath + "' because " + e.message)
@@ -794,7 +787,7 @@ object AndroidUtilities {
                     return null
                 }
             }
-            return typefaceCache.get(assetPath)
+            return typefaceCache[assetPath]
         }
     }
 

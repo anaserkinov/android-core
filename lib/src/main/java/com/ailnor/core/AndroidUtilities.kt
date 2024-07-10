@@ -48,7 +48,7 @@ import kotlin.math.ceil
 
 object AndroidUtilities {
 
-    private val typefaceCache = HashMap<String, Typeface>()
+    private val typefaceCache = Hashtable<String, Typeface>()
     private var adjustOwnerId = 0
     private var lastFragmentId = 1
     var density = 1f

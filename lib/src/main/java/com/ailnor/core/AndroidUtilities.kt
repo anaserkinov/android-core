@@ -689,8 +689,8 @@ object AndroidUtilities {
         }
     }
 
-    fun snapshotView(v: View): Bitmap {
-        val bm = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+    fun snapshotView(v: View, height: Int = v.height): Bitmap {
+        val bm = Bitmap.createBitmap(v.width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bm)
         v.draw(canvas)
         val loc = IntArray(2)

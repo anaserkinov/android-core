@@ -97,6 +97,8 @@ public class SnowflakesEffect {
 
     private int color;
 
+    private boolean fitSystemWindows = false;
+
     public SnowflakesEffect(int viewType) {
         this.viewType = viewType;
         particlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -123,6 +125,10 @@ public class SnowflakesEffect {
             particlePaint.setColor(color);
             particleThinPaint.setColor(color);
         }
+    }
+
+    public void setFitSystemWindows(boolean value){
+        fitSystemWindows = value;
     }
 
     private void updateParticles(long dt) {
@@ -172,7 +178,7 @@ public class SnowflakesEffect {
         if (particles.size() < maxCount) {
             for (int i = 0; i < createPerFrame; i++) {
                 if (particles.size() < maxCount && AndroidUtilities.INSTANCE.getRandom().nextFloat() > 0.7f) {
-                    int statusBarHeight = (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.INSTANCE.getStatusBarHeight() : 0);
+                    int statusBarHeight = (Build.VERSION.SDK_INT >= 21 && fitSystemWindows ? AndroidUtilities.INSTANCE.getStatusBarHeight() : 0);
                     float cx = AndroidUtilities.INSTANCE.getRandom().nextFloat() * parent.getMeasuredWidth();
                     float cy = statusBarHeight + AndroidUtilities.INSTANCE.getRandom().nextFloat() * (parent.getMeasuredHeight() - UtilsKt.dp(20) - statusBarHeight);
 

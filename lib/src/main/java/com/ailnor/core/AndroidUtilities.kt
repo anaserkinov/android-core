@@ -91,13 +91,13 @@ object AndroidUtilities {
     val isLandscape: Boolean
         get() = !isPortrait
 
-    private var lastHolidayCheckTime = -1L
-    var isHoliday = false
+    private var lastWinterCheckTime = -1L
+    var isWinter = false
         get() {
-            if ((System.currentTimeMillis() - lastHolidayCheckTime) > 60 * 1000){
+            if ((System.currentTimeMillis() - lastWinterCheckTime) > 60 * 1000){
                 val month = Calendar.getInstance().get(Calendar.MONTH)
                 field = month == 0 || month == 1 || month == 11
-                lastHolidayCheckTime = System.currentTimeMillis()
+                lastWinterCheckTime = System.currentTimeMillis()
             }
             return field
         }

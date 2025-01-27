@@ -23,6 +23,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.SparseArray
 import android.view.TextureView
@@ -90,6 +91,8 @@ object AndroidUtilities {
 
     val isLandscape: Boolean
         get() = !isPortrait
+
+    var animationEnabled = true
 
     private var lastWinterCheckTime = -1L
     var isWinter = false
@@ -161,6 +164,9 @@ object AndroidUtilities {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        val duration = Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
+        val transition = Settings.Global.getFloat(context.contentResolver, Settings.Global.TRANSITION_ANIMATION_SCALE, 1f)
+        animationEnabled = duration != 0f && transition != 0f
     }
 
     fun getPixelsInCM(cm: Float, isX: Boolean): Float {
